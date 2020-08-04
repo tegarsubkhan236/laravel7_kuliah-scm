@@ -1,0 +1,110 @@
+
+@section('edit')
+<!-- edit Modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Data Order</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+
+        <div class="modal-body" id="body-edit" method="POST" action="">
+            <form id="form">
+                @csrf
+                <div class="form-group">
+                    <label>Nama Marketing</label>
+                    <input type="hidden" name="id" class="form-control" id="id">
+                    <select name="marketing_id" class="form-control" id="marketing_id">
+                        <option hidden>==Pilih nama marketing==</option>
+                        @foreach ($marketing as $x)
+                        <option value="{{$x->id}}">{{$x->id}} - {{$x->nama_marketing}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Cuci</label>
+                    <select name="jenis_id" class="form-control" id="jenis_id">
+                        <option hidden> ==Pilih jenis cuci==</option>
+                        @foreach ($jenis as $x)
+                        <option value="{{$x->id}}">{{$x->id}} - {{$x->nama}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status" class="form-control" id="status">
+                        <option hidden> ==Pilih Status==</option>
+                        <option value="Diterima"> Diterima </option>
+                        <option value="Dalam Pengerjaan"> Dalam Pengerjaan </option>
+                    </select>
+                </div>
+        </div>
+        <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script src="{{ asset("style/assets/js/vendor/jquery-2.1.4.min.js")}}"></script>
+
+<script type="text/javascript">
+    // $(document).on("click","#edit_order", function(){
+    //     var id_order = $(this).data('id');
+    //     var marketing_id = $(this).data('marketing_id');
+    //     var jenis_id = $(this).data('jenis_id');
+    //     var status = $(this).data('status');
+    //     $("#body-edit #id").val(id_order);
+    //     $("#body-edit #marketing_id").val(marketing_id);
+    //     $("#body-edit #jenis_id").val(jenis_id);
+    //     $("#body-edit #status").val(status);
+    // })
+
+    // $(document).ready(function(e){
+    //     $("#form").on("submit", (function(e){
+    //         e.preventDefault();
+    //         $.ajax({
+    //             url : '',
+    //             type : 'POST',
+    //             data : new FormData(this),
+    //             contentType : false,
+    //             cache : false,
+    //             processData : false,
+    //             success : function(msg) {
+    //                 $(.$table).html(msg);
+    //             }
+    //         });
+    //     }));
+    // })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table =  $('#bootstrap-data-table-export').DataTable();
+
+        table.on('click', '.edit', function(){
+            $tr = $(this).closet('tr');
+            if($($tr).hasClass('child')){
+                $tr = $tr.prev('.parent');
+            }
+
+            var data = table.row($tr).data();
+            console.log(data);
+
+            $('#marketing_id').val(data[1]);
+            $('#jenis_id').val(data[2]);
+            $('#status').val(data[3]);
+
+            $('#editForm').attr('action', 'order/'+data[0]+'/edit')
+            $('#editModal').modal('show');
+        })
+    } );
+</script>
+{{-- end EditModal --}}
+@endsection
